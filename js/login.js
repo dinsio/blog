@@ -46,15 +46,18 @@ $(document)
 var conn = new Wilddog("https://dinsio-blog.wilddogio.com/");
 // 匿名登录函数
 function loginAnonymously(){
-  conn.authAnonymously(
-    function(err,data){
-      if(err == null){
-        console.log("auth success! msg:",data);
-      } else {
-        console.log("auth failed, msg:",err);
+  if (conn.getAuth()) console.log("auth already exists, msg:",conn.getAuth());
+  else {
+    conn.authAnonymously(
+      function(err,data){
+        if(err == null){
+          console.log("auth success! msg:",data);
+        } else {
+          console.log("auth failed, msg:",err);
+        }
       }
-    }
-  );
+    );
+  }
 };
 // 自动匿名登录
 loginAnonymously();
