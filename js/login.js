@@ -55,6 +55,7 @@ function loginAnonymously(){
   else needUnauth = true;
   if (needUnauth)
   {
+    conn.unauth();
     conn.authAnonymously(
       function(err,data){
         if(err == null){
@@ -70,8 +71,6 @@ function loginAnonymously(){
 loginAnonymously();
 // 博主登录函数
 function login(email,password){
-  // 先注销匿名登录
-  conn.unauth();
   conn.authWithPassword({email:email,password:password},
     function(err,data){
       if(err == null){
