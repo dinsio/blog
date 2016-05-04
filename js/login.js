@@ -38,8 +38,9 @@ $(document)
         
       }
     });
-    //
-    // 建立wilddog链接
-    var ref = new Wilddog("https://dinsio-blog.wilddogio.com/");
   })
 ;
+
+//
+// 建立wilddog链接
+var ref = new Wilddog("https://dinsio-blog.wilddogio.com/");
