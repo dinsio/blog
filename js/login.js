@@ -32,7 +32,7 @@ $(document)
     ;
     //
     // 登录按钮点击
-    $('#check-login').on('click',function(){
+    $('#check-login').on('click',function(event){
       if ($('.ui.form').form('is valid'))
       {
         login($('#email').val(),$('#password').val());
