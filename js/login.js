@@ -50,11 +50,12 @@ function loginAnonymously(){
   if (conn.getAuth())
   {
     console.log("auth already exists, msg:",conn.getAuth());
-    if (conn.getAuth().provider == "password") needUnauth = true;
+    if (conn.getAuth().provider != "anonymous") needUnauth = true;
   }
   else needUnauth = true;
   if (needUnauth)
   {
+    console.log("switch to anonymously auth!");
     conn.unauth();
     conn.authAnonymously(
       function(err,data){
