@@ -46,8 +46,15 @@ $(document)
 var conn = new Wilddog("https://dinsio-blog.wilddogio.com/");
 // 匿名登录函数
 function loginAnonymously(){
-  if (conn.getAuth()) console.log("auth already exists, msg:",conn.getAuth());
-  else {
+  var needUnauth = false;
+  if (conn.getAuth())
+  {
+    console.log("auth already exists, msg:",conn.getAuth());
+    if (conn.getAuth().provider != "password") needUnauth = true;
+  }
+  else needUnauth = true;
+  if (needUnauth)
+  {
     conn.authAnonymously(
       function(err,data){
         if(err == null){
