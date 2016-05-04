@@ -46,17 +46,10 @@ $(document)
 var conn = new Wilddog("https://dinsio-blog.wilddogio.com/");
 // 匿名登录函数
 function loginAnonymously(){
-  var needUnauth = false;
-  if (conn.getAuth())
+  if (conn.getAuth()) console.log("auth already exists, msg:",conn.getAuth());
+  else
   {
-    console.log("auth already exists, msg:",conn.getAuth());
-    if (conn.getAuth().provider != "anonymous") needUnauth = true;
-  }
-  else needUnauth = true;
-  if (needUnauth)
-  {
-    console.log("switch to anonymously auth!");
-    conn.unauth();
+    console.log("start anonymous mode auth!");
     conn.authAnonymously(
       function(err,data){
         if(err == null){
@@ -76,10 +69,12 @@ function login(email,password){
     function(err,data){
       if(err == null){
         console.log("auth success! msg:",data);
+        alert('登录验证成功！');
       } else {
-        // 重新匿名登录
-        loginAnonymously();
         console.log("auth failed, msg:",err);
+        console.log("current auth msg:",conn.getAuth());
+        // 重新匿名登录
+        //loginAnonymously();
       }
     }
   );
