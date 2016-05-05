@@ -6314,7 +6314,7 @@ _e(function (E, $) {
         }
 
         // ------ 显示进度 ------
-        editor.showUploadProgress = function (pregress) {
+        editor.showUploadProgress = function (progress) {
             if (timeoutId) {
                 clearTimeout(timeoutId);
             }
@@ -6323,7 +6323,9 @@ _e(function (E, $) {
             render();
 
             $progress.show();
-            $progress.width(pregress * width);
+            $progress.css({
+                width: progress + '%'
+            }});
         };
 
         // ------ 隐藏进度条 ------
