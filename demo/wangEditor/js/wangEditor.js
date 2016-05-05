@@ -6307,7 +6307,8 @@ _e(function (E, $) {
             isRender = true;
 
             $progress.css({
-                top: menuHeight + 'px'
+                top: menuHeight + 'px',
+                width: width + 'px'
             });
             $editorContainer.append($progress);
         }
