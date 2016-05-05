@@ -1428,7 +1428,7 @@ _e(function (E, $) {
         var self = this;
         var data = self.data;
         var tpl = self.tpl || '<span>{#title}</span>';
-        var $list = $('<div class="wangEditor-drop-list clearfix" style="position: relative;"></div>');
+        var $list = $('<div class="wangEditor-drop-list clearfix"></div>');
 
         var itemContent;
         var $item;
@@ -6307,10 +6307,9 @@ _e(function (E, $) {
             isRender = true;
 
             $progress.css({
-                bottom: '0'
-                //top: menuHeight + 'px'
+                top: menuHeight + 'px'
             });
-            menuContainer.append($progress);
+            $editorContainer.append($progress);
         }
 
         // ------ 显示进度 ------
@@ -7462,6 +7461,16 @@ _e(function (E, $) {
                     editor._isMenufixed = false;
                 }
             }
+        });
+
+        E.$window.resize(function () {
+            //全屏模式不支持
+            if (editor.isFullScreen) {
+                return;
+            }
+            // 重新计算宽度
+            menuWidth = $editorContainer.width();
+            $menuContainer.width(menuWidth);
         });
     });
 
