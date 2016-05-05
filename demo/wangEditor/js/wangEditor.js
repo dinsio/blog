@@ -6323,7 +6323,8 @@ _e(function (E, $) {
 
             $progress.show();
             $progress.css({
-                width: progress + '%'
+                width: progress + '%',
+                top: menuContainer.height() + 'px'
             });
         };
 
