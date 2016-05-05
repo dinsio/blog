@@ -6321,11 +6321,10 @@ _e(function (E, $) {
             // 显示之前，先判断是否渲染
             render();
 
-            var progressTop = menuContainer.height();
             $progress.show();
             $progress.css({
                 width: progress + '%',
-                top: progressTop + 'px'
+                top: menuContainer.height() + 'px'
             });
         };
 
@@ -7468,7 +7467,7 @@ _e(function (E, $) {
         });
 
         E.$window.resize(function () {
-<<<<<<< HEAD
+
             //全屏模式不支持
             if (editor.isFullScreen) {
                 return;
@@ -7480,9 +7479,6 @@ _e(function (E, $) {
                 width: fixedMenuWidth + 'px'
             });
 
-=======
-            alert('resize');
->>>>>>> parent of 72c5cbe... ....
         });
     });
 
