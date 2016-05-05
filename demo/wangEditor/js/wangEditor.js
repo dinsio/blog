@@ -6321,6 +6321,11 @@ _e(function (E, $) {
             // 显示之前，先判断是否渲染
             render();
 
+            var progressTop = menuContainer.height();
+            if (editor.menuContainer.css('position') == 'fixed'){
+                alert('1');
+                progressTop = progressTop - menuContainer.offset().top;
+            } 
             $progress.show();
             $progress.css({
                 width: progress + '%',
@@ -7473,7 +7478,7 @@ _e(function (E, $) {
             }
             // 重新计算宽度
             var fixedMenuWidth = editor.$editorContainer.width();
-            // 吸顶
+            // 重新设定宽度
             $menuContainer.css({
                 width: fixedMenuWidth + 'px'
             });
