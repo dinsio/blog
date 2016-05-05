@@ -7467,7 +7467,6 @@ _e(function (E, $) {
         });
 
         E.$window.resize(function () {
-
             //全屏模式不支持
             if (editor.isFullScreen) {
                 return;
