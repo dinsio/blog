@@ -14,16 +14,264 @@
     <script src = "https://cdn.wilddog.com/js/client/current/wilddog.js" ></script>
 
     <style type="text/css">
+        * {
+            font-family: "Hiragino Sans GB","Microsoft YaHei","\5FAE\8F6F\96C5\9ED1",tahoma,arial,simsun,"\5B8B\4F53";
+            font-size: 12px;
+            color: #999;
+        }
+        *[hidefocus] {
+            outline: 0;
+        }
+        a {
+            text-decoration: none;
+        }
         body {
-            background-color: #DADADA;
+            background-color: #292929;
         }
             body > .grid {
                 height: 100%;
             }
+        .g-doc {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+        .g-body {
+            position: relative;
+            zoom: 1;
+            width: 1010px;
+            padding: 0 226px 0 87px;
+            margin: 0 auto;
+        }
+        .g-side {
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            z-index: 10;
+            width: 226px;
+            height: 100%;
+        }
+        .g-sidewrap {
+            background: #e8e8e8;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            padding: 30px 26px 0 30px;
+        }
+	        .m-nav a {
+	            color: #999;
+	        }
+        .g-main {
+        	width: 697px;
+		    padding: 90px 55px 0 55px;
+		    background-color: #fff;
+		}
+			.m-nick {
+			    height: 54px;
+			    line-height: 54px;
+			    text-align: right;
+			}
+				.m-nick a {
+				    font-size: 30px;
+				    color: #292929;
+				}
+			.m-about {
+			    color: #999;
+			    line-height: 21px;
+			    text-align: right;
+			    _zoom: 1;
+			}
+			.m-pager {
+			    margin: 30px 0 100px 0;
+			    text-align: center;
+			}
+				.m-pager .prev {
+				    margin-right: 20px;
+				}
+				.m-pager .next {
+				    margin-left: 20px;
+				}
+				.m-pager .prev, .m-pager .next {
+				    font-family: "宋体",simsun;
+				}
+				.m-pager a {
+				    margin: 0 10px;
+				    color: #333;
+				    font-size: 13px;
+				}
+			.m-copyr {
+			    width: 100%;
+			    height: 20px;
+			    line-height: 20px;
+			    padding-bottom: 70px;
+			    margin-top: 100px;
+			    color: #999;
+			    text-align: center;
+			    opacity: .5;
+			}
+				.m-copyr a {
+				    color: #999;
+				}
+			.g-postlist {
+			    padding-bottom: 1px;
+			    margin-top: 70px;
+			    _margin-bottom: -55px;
+			}
+				.m-post-photo img {
+					width: 100%;
+				}
+				.m-post {
+				    position: relative;
+				    z-index: 5;
+				    zoom: 1;
+				    z-index: 5;
+				    margin-bottom: 55px;
+				}
+					.m-post .wrap {
+					    margin-bottom: 10px;
+					}
+					.m-post .text, .m-detail .text {
+					    padding-bottom: 1px;
+					}
+					.m-post .text {
+					    line-height: 27px;
+					    color: #666;
+					    font-size: 14px;
+					}
+					.m-post .otherinfo {
+					    line-height: 22px;
+					}
+						.m-post .otherinfo a {
+						    color: #ccc;
+						    margin-right: 30px;
+						}
+						.hot {
+						    margin-top: 40px;
+						}
+						.m-post .otherinfo .time, .m-post .otherinfo .time:hover, .m-detail .otherinfo .time, .m-detail .otherinfo .time:hover {
+							position: absolute;
+							top: 0;
+							left: -142px;
+						    color: #8b8b8b;
+						}
+						.m-post .otherinfo .time .year {
+						    position: absolute;
+						    left: 50px;
+						    top: 26px;
+						    width: 30px;
+						    height: 16px;
+						    line-height: 16px;
+						    paddingt-right: 10px;
+						}
+						.m-post .otherinfo .time .month {
+						    position: absolute;
+						    left: 50px;
+						    top: 8px;
+						    width: 30px;
+						    height: 16px;
+						    line-height: 16px;
+						    paddingt-right: 10px;
+						}
+						.m-post .otherinfo .time .day {
+						    position: absolute;
+						    left: 0;
+						    top: 0;
+						    width: 54px;
+						    height: 50px;
+						    line-height: 50px;
+						    font-size: 38px;
+						    text-align: left;
+						    letter-spacing: 3px;
+						}
+						.m-detail .otherinfo .time .arrowright, .m-post .otherinfo .time .arrowright {
+						    border-color: #fff #fff #fff #292929;
+						}
+						.m-post .otherinfo .time .arrowright {
+						    position: absolute;
+						    left: 87px;
+						    top: 13px;
+						    width: 0;
+						    height: 0;
+						    line-height: 0;
+						    border-style: solid;
+						    border-width: 12px 12px;
+						}
     </style>
 
 </head>
 <body>
-    欢迎光临！
+    <div class="g-doc">
+        <div class="g-body">
+            <div id="g-side" class="g-side">
+                <div class="g-sidewrap">
+                    <a class="f-trans m-face" hidefocus="true" href="/">
+                        <img class="f-trans" src="http://imgsize.ph.126.net/?imgurl=http://img1.ph.126.net/raPiLZV3NgUhNUommw1LgQ==/6630651050793924652.jpg_180x180x0x90.jpg">
+                        <span class="f-trans arrowleft">&nbsp;</span>
+                    </a>
+                    <div class="m-nav">
+                        <div class="navitm search">
+                            <a hidefocus="true" href="#" id="search_btn">搜索</a>
+                            <form action="/search" method="get"></form>
+                        </div>
+                        <div class="navitm guidang"><a href="http://dinsio.lofter.com/view" hidefocus="true">归档</a></div>
+                        <div class="navitm rss"><a href="http://dinsio.lofter.com/rss" hidefocus="true">RSS</a></div>
+                    </div>     
+                </div>
+            </div>
+            <div class="g-main">
+                <div class="m-nick"><a hidefocus="true" href="/">创业者说</a></div>
+                <div class="m-about">发梦、观察、思考、践行、生存或死亡、进化&hellip;&hellip;<br/>这条路你真的准备好了吗？</div>
+
+                <div class="g-postlist">
+                	<div class="m-post m-post-photo">
+	                    <div class="content">
+	                        <div class="wrap">
+	                            <div class="img">
+	                                <a href="http://dinsio.lofter.com/post/1d654d53_87dc358"><img src="http://imglf0.nosdn.127.net/img/RUNyR0VtenhLWlZjUit5MDJiWVl1dVRMM0REL0xsWTlEMlR5VGNWQlBFYWlYYlRIZzVPQzdnPT0.jpg?imageView&amp;thumbnail=1680x0&amp;quality=96&amp;stripmeta=0&amp;type=jpg"></a>
+	                            </div>
+	                        </div>
+	                        <div class="text">
+	                            <p>看以上几张图就能明白本文的主题了。</p> 
+								<p>不想长篇大论，提出几个问题供创业者们讨论：</p> 
+								<p>1、接二连三的合并大手笔，是为应对竞争压力还是幕后资本的游戏？</p> 
+								<p>2、坐在门口当街烧钱直至大部分竞争对手无法跟进而死去然后等剩下来的也都支撑不住之后合并，难道这就是互联网或者O2O的唯一玩法？</p> 
+								<p>3、互联网真的从“群雄逐鹿”进入所谓的“英雄联盟”时代了吗？势单力孤的小创业者从此再无活路？</p> 
+								<p>4、合并之后带来的好处和坏处各有哪些？</p> 
+								<p>5、在这些合并当中，创始人自己的意愿有多大分量？</p> 
+								<p>6、创业的初心是什么？创办并发展自己的事业，还是沦为幕后资本运作上市圈股民钱的工具？<br></p> 
+								<p>7、你觉得合并之后，寡头出现了吗？</p>
+	                        </div>                       
+	                    </div>
+	                    <div class="otherinfo">
+	                        <a class="readall" href="http://dinsio.lofter.com/post/1d654d53_87dc358" hidefocus="true">//　查看全文</a>
+	                        <a class="hot" href="http://dinsio.lofter.com/post/1d654d53_87dc358" hidefocus="true">热度(1)</a>
+	                        <a class="time" href="http://dinsio.lofter.com/post/1d654d53_87dc358" hidefocus="true">
+	                            <span class="year">2015</span>
+	                            <span class="month">10月</span>
+	                            <span class="day">09</span>
+	                            <em class="arrowright">&nbsp;</em>
+	                        </a>
+	                    </div>
+	                </div>
+                </div>
+
+                <div class="m-pager">
+                	<a href="" style="visibility:hidden;" class="prev" hidefocus="true">&lt;</a>
+                	<a href="?page=1" class="pgnum" hidefocus="true">1</a>
+                	<a href="?page=2" class="pgnum" hidefocus="true">2</a>
+                	<a href="?page=2&t=1441365129710"  class="next" hidefocus="true">&gt;</a>
+                </div>
+
+                <div class="m-copyr">
+                	<span class="copyr">
+                		&copy; <a href="http://dinsio.github.io/blog/">创业者说</a>
+                		<span class="sep"> | </span>
+                		Powered by <a href="http://dinsio.github.io/blog/">Dinsio BLOG</a>
+                	</span>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
