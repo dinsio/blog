@@ -7467,7 +7467,17 @@ _e(function (E, $) {
         });
 
         E.$window.resize(function () {
-            alert('resize');
+            //全屏模式不支持
+            if (editor.isFullScreen) {
+                return;
+            }
+            // 重新计算宽度
+            var fixedMenuWidth = editor.$editorContainer.width();
+            // 吸顶
+            $menuContainer.css({
+                width: fixedMenuWidth + 'px'
+            });
+
         });
     });
 
