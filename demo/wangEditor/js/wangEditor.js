@@ -6322,10 +6322,6 @@ _e(function (E, $) {
             render();
 
             var progressTop = menuContainer.height();
-            if (editor.menuContainer.css('position') == 'fixed'){
-                alert('1');
-                progressTop = progressTop - menuContainer.offset().top;
-            } 
             $progress.show();
             $progress.css({
                 width: progress + '%',
@@ -7472,6 +7468,7 @@ _e(function (E, $) {
         });
 
         E.$window.resize(function () {
+<<<<<<< HEAD
             //全屏模式不支持
             if (editor.isFullScreen) {
                 return;
@@ -7483,6 +7480,9 @@ _e(function (E, $) {
                 width: fixedMenuWidth + 'px'
             });
 
+=======
+            alert('resize');
+>>>>>>> parent of 72c5cbe... ....
         });
     });
 
