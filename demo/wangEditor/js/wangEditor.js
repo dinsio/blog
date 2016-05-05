@@ -1428,7 +1428,7 @@ _e(function (E, $) {
         var self = this;
         var data = self.data;
         var tpl = self.tpl || '<span>{#title}</span>';
-        var $list = $('<div class="wangEditor-drop-list clearfix"></div>');
+        var $list = $('<div class="wangEditor-drop-list clearfix" style="position: relative;"></div>');
 
         var itemContent;
         var $item;
@@ -6301,16 +6301,16 @@ _e(function (E, $) {
         // 渲染事件
         var isRender = false;
         function render() {
-            if (isRender && menuHeight == menuContainer.height()) {
+            if (isRender) {
                 return;
-            } else {
-                menuHeight = menuContainer.height();
-                $progress.css({
-                    top: menuHeight + 'px'
-                });
-                $editorContainer.append($progress);
             }
             isRender = true;
+
+            $progress.css({
+                bottom: '0'
+                //top: menuHeight + 'px'
+            });
+            menuContainer.append($progress);
         }
 
         // ------ 显示进度 ------
