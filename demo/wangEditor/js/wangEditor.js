@@ -6301,16 +6301,16 @@ _e(function (E, $) {
         // 渲染事件
         var isRender = false;
         function render() {
-            if (isRender) {
+            if (isRender && menuHeight == menuContainer.height()) {
                 return;
+            } else {
+                menuHeight = menuContainer.height();
+                $progress.css({
+                    top: menuHeight + 'px'
+                });
+                $editorContainer.append($progress);
             }
             isRender = true;
-
-            $progress.css({
-                top: menuHeight + 'px',
-                width: width + 'px'
-            });
-            $editorContainer.append($progress);
         }
 
         // ------ 显示进度 ------
