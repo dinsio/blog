@@ -35,7 +35,7 @@
 <body>
     <div class="ui middle aligned center aligned grid">
         <div class="fourteen wide column">
-            <form class="ui large form" method="post" action="#" target="formTarget">
+            <form v-on:submit.prevent="onSubmit" id="loginForm" class="ui large form">
                 <div class="ui raised segment" style="padding:30px 20px;">
                     <h1 class="ui teal image header">
                         博主登录
@@ -43,20 +43,33 @@
                     <div class="field">
                         <div class="ui left icon input">
                             <i class="user icon"></i>
-                            <input id="email" type="text" name="email" placeholder=" 电子邮箱">
+                            <input id="email" type="text" name="email" placeholder=" 电子邮箱" v-on:keyup.enter="submit" />
                         </div>
                     </div>
                     <div class="field">
                         <div class="ui left icon input">
                             <i class="lock icon"></i>
-                            <input id="password" type="password" name="password" placeholder=" 密码">
+                            <input id="password" type="password" name="password" placeholder=" 密码" v-on:keyup.enter="submit" />
                         </div>
                     </div>
                     <div id="check-login" class="ui fluid large teal submit button">登&nbsp;&nbsp;&nbsp;&nbsp;录</div>
                 </div>
                 <div id="message-box" class="ui error message"></div>
             </form>
-            <iframe src="about:blank" name="formTarget" style="display:none;width:0;height:0;"></iframe>
+        </div>
+    </div>
+    <div class="ui small modal">
+        <div class="header">
+            登录失败
+        </div>
+        <div class="content">
+            <p>请检查您的邮箱和地址是否正确</p>
+        </div>
+        <div class="actions">
+            <div id="closeButton" class="ui right labeled icon button">
+                知道了
+                <i class="checkmark icon"></i>
+            </div>
         </div>
     </div>
 </body>
