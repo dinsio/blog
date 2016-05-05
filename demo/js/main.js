@@ -3,7 +3,6 @@
 /*global FileProgress */
 /*global hljs */
 
-
 $(function() {
     var uploader = Qiniu.uploader({
         runtimes: 'html5,flash,html4',
@@ -15,7 +14,7 @@ $(function() {
         dragdrop: true,
         chunk_size: '4mb',
         //uptoken_url: $('#uptoken_url').val(),
-        uptoken : '1q2w3e4r5t6y7u8i1q2w3e4r5t6y7u8i',
+        uptoken : 'ZwXrin6ZGzFCYD_npAeD3OHwALCC1GBvIZpMm1RW:8VWF9HVNVQQ4XnF6CE6UjGASysQ=:eyJzY29wZSI6ImRpbnNpby1ibG9nIiwiZGVhZGxpbmUiOjE0NjI0NTQxNDgsImluc2VydE9ubHkiOjAsImRldGVjdE1pbWUiOjAsImZzaXplTGltaXQiOjAsImNhbGxiYWNrRmV0Y2hLZXkiOjB9',
         domain: 'http://o6p45r7np.bkt.clouddn.com/',
         //domain: $('#domain').val(),
         // downtoken_url: '/downtoken',
