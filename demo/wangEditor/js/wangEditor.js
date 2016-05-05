@@ -6331,7 +6331,9 @@ _e(function (E, $) {
         // ------ 隐藏进度条 ------
         var timeoutId;
         function hideProgress() {
-            $progress.hide();
+            $progress.hide().css({
+                width: '0'
+            });
             timeoutId = null;
         }
         editor.hideUploadProgress = function (time) {
@@ -7415,6 +7417,7 @@ _e(function (E, $) {
         var $txt = editor.txt.$txt;
 
         E.$window.scroll(function () {
+            alert('scroll');
             //全屏模式不支持
             if (editor.isFullScreen) {
                 return;
