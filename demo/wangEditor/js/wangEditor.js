@@ -6325,7 +6325,7 @@ _e(function (E, $) {
             $progress.show();
             $progress.css({
                 width: progress + '%'
-            }});
+            });
         };
 
         // ------ 隐藏进度条 ------
