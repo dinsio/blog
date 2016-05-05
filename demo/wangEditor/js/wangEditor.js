@@ -7463,15 +7463,6 @@ _e(function (E, $) {
             }
         });
 
-        E.$window.resize(function () {
-            //全屏模式不支持
-            if (editor.isFullScreen) {
-                return;
-            }
-            // 重新计算宽度
-            menuWidth = $editorContainer.width();
-            $menuContainer.width(menuWidth);
-        });
     });
 
 })(window, window.wangEditor, window.jQuery);
