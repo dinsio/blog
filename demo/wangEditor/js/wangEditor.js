@@ -7417,7 +7417,6 @@ _e(function (E, $) {
         var $txt = editor.txt.$txt;
 
         E.$window.scroll(function () {
-            alert('scroll');
             //全屏模式不支持
             if (editor.isFullScreen) {
                 return;
@@ -7467,6 +7466,9 @@ _e(function (E, $) {
             }
         });
 
+        E.$window.resize(function () {
+            alert('resize');
+        });
     });
 
 })(window, window.wangEditor, window.jQuery);
