@@ -12,28 +12,21 @@
     <script src="semantic/jquery.js"></script>
     <script src="semantic/semantic.js"></script>
     <script src="js/vue.js"></script>
+    <script src="js/jquery.ba-hashchange.js"></script>
     <script src = "https://cdn.wilddog.com/js/client/current/wilddog.js" ></script>
     <script src="js/admin-main.js"></script>
 
 </head>
 <body>
-     <div id="indexContainer" class="g-doc">
+     <div id="mainContainer" class="g-doc">
         <div class="g-body">
             <div id="g-side" class="g-side">
                 <div class="g-sidewrap">
-                    <a class="f-trans m-face" hidefocus="true" v-bind:href="blogUrl">
-                        <img class="ui small circular image" v-bind:src="blogAvatar">
+                    <a class="f-trans m-face" hidefocus="true" v-bind:href="configs.blogUrl">
+                        <img class="ui small circular image" v-bind:src="configs.blogAvatar">
                         <span class="f-trans arrowleft">&nbsp;</span>
                     </a>
                     <div class="m-nav">
-                        <div class="navitm search">
-                            <form action="/search" method="get">
-                                <div class="ui icon mini input" style="width:100%;">
-                                    <input type="text" placeholder=" 内容搜索">
-                                    <i class="search link icon"></i>
-                                </div>                              
-                            </form>
-                        </div>
                         <div class="ui vertical text menu" style="width: 170px;">
                           <div style="text-align: center; line-height: 220%;">
                             <a class="ui teal label">作者</a>
@@ -48,85 +41,100 @@
             <div class="g-main" style="text-align: center;">
                 <div class="ui small four statistics">
                   <div class="statistic">
-                    <div class="value">
-                      22
-                    </div>
+                    <div class="value">{{ configs.blogs }}</div>
                     <div class="label">
                       Blogs
                     </div>
                   </div>
                   <div class="statistic">
-                    <div class="value">
-                      512
-                    </div>
+                    <div class="value">{{ configs.comments }}</div>
                     <div class="label">
                       Comments
                     </div>
                   </div>
                   <div class="statistic">
-                    <div class="value">
-                      42
-                    </div>
+                    <div class="value">{{ configs.tags }}</div>
                     <div class="label">
                       Tags
                     </div>
                   </div>
                  <div class="statistic">
-                    <div class="value">
-                      4543
-                    </div>
+                    <div class="value">{{ configs.pageViews }}</div>
                     <div class="label">
                       Page Views
                     </div>
                   </div>
                 </div>
                 <div class="g-postlist">
-                    <div class="m-post m-post-photo" v-for="blog in blogs">
+                    <div class="m-post m-post-photo">
                         <div class="content">
                             <div class="text">
-                                <!--导航栏-->
-                                <div class="ui teal five item menu">
-                                  <a class="item active">
-                                    管理博客
+                                <!--管理员导航栏-->
+                                <div class="ui teal menu">
+                                  <div class="header item">
+                                    <i class="setting icon"></i>
+                                    管理面板
+                                  </div>
+                                  <a class="item" data-page="mblogs" v-on:click="navHeadClick('mblogs')">
+                                    博客
                                   </a>
-                                  <a class="item">
-                                    管理留言
+                                  <a class="item" data-page="mcomments" v-on:click="navHeadClick('mcomments')">
+                                    留言
                                   </a>
-                                  <a class="item">
-                                    管理标签
+                                  <a class="item" data-page="musers" v-show="configs.isSiteAdmin" v-on:click="navHeadClick('musers')">
+                                    作者
                                   </a>
-                                  <a class="item">
-                                    管理作者
+                                  <a class="item" data-page="mtags" v-show="configs.isSiteAdmin" v-on:click="navHeadClick('mtags')">
+                                    标签
                                   </a>
-                                  <a class="item">
-                                    查看归档
+                                  <a class="item" data-page="machieves" v-on:click="navHeadClick('machieves')">
+                                    归档
+                                  </a>
+                                  <a class="item" data-page="logout" v-on:click="logout()">
+                                    <i class="sign out icon"></i>
+                                    登出
                                   </a>
                                 </div>
                                 <!--管理博客-->
-                                <div id="mblogs" class="ui segment">
-                                    <div id="blog-tab" class="ui pointing teal secondary tab-head menu">
-                                      <a class="item active" data-tab="first">撰写博文</a>
-                                      <a class="item" data-tab="second">草稿箱</a>
-                                      <a class="item" data-tab="third">历史博文</a>
+                                <div id="mblogs" data-page="mblogs" class="ui segment nav-page">
+                                    <div class="ui pointing teal secondary menu">
+                                      <a class="item active" data-tab="newblog" v-on:click="tabHeadClick('newblog')">撰写博文</a>
+                                      <a class="item" data-tab="blogdraft" v-on:click="tabHeadClick('blogdraft')">草稿箱</a>
+                                      <a class="item" data-tab="bloghistory" v-on:click="tabHeadClick('bloghistory')">历史博文</a>
                                     </div>
-                                    <div class="ui tab active" data-tab="first">
+                                    <div class="ui tab active" data-tab="newblog">
                                     撰写博文
                                     </div>
-                                    <div class="ui tab" data-tab="second">
+                                    <div class="ui tab" data-tab="blogdraft">
                                     草稿箱
                                     </div>
-                                    <div class="ui tab" data-tab="third">
+                                    <div class="ui tab" data-tab="bloghistory">
                                     历史博文
                                     </div>
                                 </div>
                                 <!--管理留言-->
-                                <div id="mcomments" class="ui"></div>
-                                <!--管理标签-->
-                                <div id="mtags" class="ui"></div>
+                                <div id="mcomments" data-page="mcomments" class="ui segment hide nav-page">
+                                </div>
                                 <!--管理作者-->
-                                <div id="musers" class="ui"></div>
+                                <div id="musers" data-page="musers" class="ui segment hide nav-page" v-show="configs.isSiteAdmin">
+                                    <div class="ui pointing teal secondary menu">
+                                      <a class="item active" data-tab="allusers" v-on:click="tabHeadClick('allusers')">全部作者</a>
+                                      <a class="item" data-tab="newuser" v-on:click="tabHeadClick('newuser')">新增作者</a>
+                                    </div>
+                                    <div class="ui tab active" data-tab="allusers">
+                                    全部作者
+                                    </div>
+                                    <div class="ui tab" data-tab="newuser">
+                                    新增作者
+                                    </div>
+                                </div>
+                                <!--管理标签-->
+                                <div id="mtags" data-page="mtags" class="ui segment hide nav-page" v-show="configs.isSiteAdmin">
+                                </div>
                                 <!--查看归档-->
-                                <div id="machieves" class="ui"></div>
+                                <div id="machieves" data-page="machieves" class="ui segment hide nav-page">
+                                    查看归档
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -134,7 +142,7 @@
 
                 <div class="m-copyr">
                     <span class="copyr">
-                        &copy; <a v-bind:href="blogUrl">{{ blogName }}</a>
+                        &copy; <a v-bind:href="configs.blogUrl">{{ configs.blogName }}</a>
                         <span class="sep"> | </span>
                         Powered by <a href="http://dinsio.github.io/blog/">Dinsio BLOG</a>
                     </span>

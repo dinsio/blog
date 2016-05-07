@@ -15,6 +15,10 @@ body {
     body > .grid {
         height: 100%;
     }
+.hide {
+	display: none;
+}
+
 .g-doc {
     display: block;
     width: 100%;

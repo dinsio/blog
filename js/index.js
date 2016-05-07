@@ -1,9 +1,28 @@
+// 为了方便调试操作，将常用对象放在jQuery包外
+var conn;
+var configs;
+var blogs;
+var indexData;
+var indexVM;
+
+// 文档加载完成后执行
 $(document)
   .ready(function () {
     //
     // 建立wilddog链接
-    var conn = new Wilddog("https://dinsio-blog.wilddogio.com/");
+    conn = new Wilddog("https://dinsio-blog.wilddogio.com/");
     console.log(conn);
+
+    // 页面vm
+    indexData = {
+      // 全局数据
+      "blogName": "",
+      "blogIntent": "",
+      "blogAvatar": "",
+      "blogUrl": "",
+      // 博客列表
+      "blogs": []
+    };
 
     // 是否博主身份
     var isBlogger = false;
@@ -81,19 +100,9 @@ $(document)
     //   });
     // }
 
-    // 页面vm
-    var indexData = {
-      // 全局数据
-      "blogName": "",
-      "blogIntent": "",
-      "blogAvatar": "",
-      "blogUrl": "",
-      // 博客列表
-      "blogs": []
-    };
 
     // 查询站点数据
-    var configs = conn.child("configs");
+    configs = conn.child("configs");
     configs.once("value",function(snap){
       console.log('get configs:', snap.val());
       indexData.blogName = snap.child("siteName").val();
@@ -103,10 +112,10 @@ $(document)
     });
 
     // 查询全部博文列表
-    var blogs = conn.child("blogs/all");
-    var blog;
+    blogs = conn.child("blogs/all");
     blogs.limitToLast(10).once("value",function(snapshot){
       indexData.blogs = [];
+      var blog;
       snapshot.forEach(function(snap){
         blog = conn.child("blogs/" + snap.val() + "/" + snap.key());
         blog.once("value",function(s){
@@ -133,7 +142,7 @@ $(document)
     });
 
     // 创建页面VM
-    var indexVM = new Vue({
+    indexVM = new Vue({
       el: '#indexContainer',
       data: indexData
     });
