@@ -1,16 +1,16 @@
-* {
-    font-family: "Hiragino Sans GB","Microsoft YaHei","\5FAE\8F6F\96C5\9ED1",tahoma,arial,simsun,"\5B8B\4F53";
-    font-size: 14px;
-    color: #999;
-}
+
 *[hidefocus] {
     outline: 0;
+}
+*,h1,h2,h3,h4,h5 {
+	font-family: "Hiragino Sans GB","Microsoft YaHei","\5FAE\8F6F\96C5\9ED1",tahoma,arial,simsun,"\5B8B\4F53";
 }
 a {
     text-decoration: none;
 }
 body {
     background-color: #292929;
+    font-size: 14px;
 }
     body > .grid {
         height: 100%;
@@ -38,7 +38,7 @@ body {
     right: 0;
     top: 0;
     bottom: 0;
-    z-index: 10;
+    z-index: 1;
     width: 226px;
     height: 100%;
 }
@@ -66,9 +66,10 @@ body {
     }
 .g-main {
 	width: 697px;
-    padding: 60px 55px 0 55px;
+    padding: 50px 55px 0 55px;
     background-color: #fff;
     height: auto;
+    z-index: 2000;
     min-height: 100%;
 }
 	.m-nick {
@@ -109,7 +110,7 @@ body {
 	    height: 20px;
 	    line-height: 20px;
 	    padding-bottom: 70px;
-	    margin-top: 80px;
+	    margin-top: 60px;
 	    color: #999;
 	    text-align: center;
 	    opacity: .5;
@@ -122,8 +123,11 @@ body {
 	    margin-top: 60px;
 	    _margin-bottom: -55px;
 	}
+		.container span {
+			color: #999;
+		}
 		.m-post-photo img {
-			width: 100%;
+			max-width: 100%;
 		}
 		.m-post {
 		    position: relative;
@@ -132,6 +136,9 @@ body {
 		    z-index: 5;
 		    margin-bottom: 55px;
 		}
+			.m-post .content {
+				padding-bottom: 30px;
+			}
 			.m-post .wrap {
 			    margin-bottom: 10px;
 			}

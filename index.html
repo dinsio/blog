@@ -21,8 +21,8 @@
         <div class="g-body">
             <div id="g-side" class="g-side">
                 <div class="g-sidewrap">
-                    <a class="f-trans m-face" hidefocus="true" v-bind:href="blogUrl">
-                        <img class="ui small circular image" v-bind:src="blogAvatar">
+                    <a class="f-trans m-face" hidefocus="true" v-bind:href="configs.blogUrl">
+                        <img class="ui small circular image" v-bind:src="configs.blogAvatar">
                         <span class="f-trans arrowleft">&nbsp;</span>
                     </a>
                     <div class="m-nav">
@@ -42,21 +42,46 @@
 						  </div>
   						</div>
 
+                        <div class="ui top attached secondary segment">
+                          <p>文章 : {{ statistics.blogs }} 篇</p>
+                        </div>
+                        <div class="ui attached secondary segment">
+                          <p>评论 : {{ statistics.comments }} 条</p>
+                        </div>
+                        <div class="ui attached secondary segment">
+                          <p>标签 : {{ statistics.tags }} 个</p>
+                        </div>
+                        <div class="ui bottom attached secondary segment">
+                          <p>访问 : {{ statistics.pageViews }} 次</p>
+                        </div>
                     </div>     
                 </div>
             </div>
             <div class="g-main" style="text-align: center;">
-                <div class="m-nick"><a hidefocus="true" v-bind:href="blogUrl">{{ blogName }}</a></div>
-                <div class="m-about">{{ blogIntent }}</div>
+                <div class="m-nick"><a hidefocus="true" v-bind:href="configs.blogUrl">{{ configs.blogName }}</a></div>
+                <div class="m-about">{{ configs.blogIntent }}</div>
 
                 <div class="g-postlist">
                 	<div class="m-post m-post-photo" v-for="blog in blogs">
 	                    <div class="content">
+                            <div class="ui top left aligned secondary stacked segment">
+                              <h3>{{ blog.title }}</h3>
+                            </div>
 	                        <div class="text">{{{ blog.content }}}</div>
+                            <div class="ui section divider"></div>
+                            <div class="ui container grid" style="text-align: left;">
+                                <div class="twelve wide column" style="padding: 10px 0 0 0;">
+                                    <i class="user icon"></i>&nbsp;<a href="index.html#author/{{ user.bloggerUID }}">{{ blog.author }}</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <i class="wait icon"></i>&nbsp;<span>{{ blog.postTime }}</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <i class="unhide icon"></i>&nbsp;<span>{{ blog.traffic }}</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <i class="comments outline icon"></i>&nbsp;<a href="index.html#comments/{{ blog.id }}">{{ blog.comments }}</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                </div>
+                                <div class="four wide column" style="padding: 10px 0;text-align: right;">
+                                    <a href="index.html#blog/{{ blog.id }}" class="ui right floated right icon">阅读全文&nbsp;&nbsp;<i class="arrow right icon"></i></a>
+                                </div>
+                            </div>
 	                    </div>
 	                    <div class="otherinfo">
-	                        <a class="readall" href="http://dinsio.lofter.com/post/1d654d53_87dc358" hidefocus="true">//　查看全文</a>
-	                        <a class="hot" href="http://dinsio.lofter.com/post/1d654d53_87dc358" hidefocus="true">热度({{ blog.traffic }})</a>
 	                        <a class="time" href="http://dinsio.lofter.com/post/1d654d53_87dc358" hidefocus="true">
 	                            <span class="year">{{ blog.postYear }}</span>
 	                            <span class="month">{{ blog.postMonth }}月</span>
@@ -67,7 +92,7 @@
 	                </div>
                 </div>
 
-                <div class="ui pagination menu" style="text-align: center;">
+                <div class="ui teal pagination menu" style="text-align: center;">
 				  <a class="active item">
 				    1
 				  </a>
@@ -87,7 +112,7 @@
 
                 <div class="m-copyr">
                 	<span class="copyr">
-                		&copy; <a v-bind:href="blogUrl">{{ blogName }}</a>
+                		&copy; <a v-bind:href="configs.blogUrl">{{ configs.blogName }}</a>
                 		<span class="sep"> | </span>
                 		Powered by <a href="http://dinsio.github.io/blog/">Dinsio BLOG</a>
                 	</span>

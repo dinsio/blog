@@ -9,12 +9,29 @@
     <title>博客后台首页</title>
     <link rel="stylesheet" type="text/css" href="semantic/semantic.min.css" />
     <link rel="stylesheet" type="text/css" href="css/site.css" />
+    <link rel="stylesheet" type="text/css" href="wangEditor/css/wangEditor.css">
     <script src="semantic/jquery.js"></script>
     <script src="semantic/semantic.js"></script>
     <script src="js/vue.js"></script>
     <script src="js/jquery.ba-hashchange.js"></script>
-    <script src = "https://cdn.wilddog.com/js/client/current/wilddog.js" ></script>
+    <script src="https://cdn.wilddog.com/js/client/current/wilddog.js" ></script>
+    <script src="wangEditor/js/wangEditor.js"></script>
+    <script src="js/plupload/plupload.full.min.js"></script>
+    <script src="js/plupload/i18n/zh_CN.js"></script>
+    <script src="js/qiniu.js"></script>
     <script src="js/admin-main.js"></script>
+    <style type="text/css">
+        #editor-trigger {
+            height: 500px;
+            max-height: 800px;
+            font-family: "Microsoft YaHei";
+        }
+        .container {
+            width: 100%;
+            margin: 0 auto;
+            position: relative;
+        }
+    </style>
 
 </head>
 <body>
@@ -41,25 +58,25 @@
             <div class="g-main" style="text-align: center;">
                 <div class="ui small four statistics">
                   <div class="statistic">
-                    <div class="value">{{ configs.blogs }}</div>
+                    <div class="value">{{ statistics.blogs }}</div>
                     <div class="label">
                       Blogs
                     </div>
                   </div>
                   <div class="statistic">
-                    <div class="value">{{ configs.comments }}</div>
+                    <div class="value">{{ statistics.comments }}</div>
                     <div class="label">
                       Comments
                     </div>
                   </div>
                   <div class="statistic">
-                    <div class="value">{{ configs.tags }}</div>
+                    <div class="value">{{ statistics.tags }}</div>
                     <div class="label">
                       Tags
                     </div>
                   </div>
                  <div class="statistic">
-                    <div class="value">{{ configs.pageViews }}</div>
+                    <div class="value">{{ statistics.pageViews }}</div>
                     <div class="label">
                       Page Views
                     </div>
@@ -81,10 +98,10 @@
                                   <a class="item" data-page="mcomments" v-on:click="navHeadClick('mcomments')">
                                     留言
                                   </a>
-                                  <a class="item" data-page="musers" v-show="configs.isSiteAdmin" v-on:click="navHeadClick('musers')">
+                                  <a class="item" data-page="musers" v-show="user.isSiteAdmin" v-on:click="navHeadClick('musers')">
                                     作者
                                   </a>
-                                  <a class="item" data-page="mtags" v-show="configs.isSiteAdmin" v-on:click="navHeadClick('mtags')">
+                                  <a class="item" data-page="mtags" v-show="user.isSiteAdmin" v-on:click="navHeadClick('mtags')">
                                     标签
                                   </a>
                                   <a class="item" data-page="machieves" v-on:click="navHeadClick('machieves')">
@@ -103,7 +120,29 @@
                                       <a class="item" data-tab="bloghistory" v-on:click="tabHeadClick('bloghistory')">历史博文</a>
                                     </div>
                                     <div class="ui tab active" data-tab="newblog">
-                                    撰写博文
+                                        <div class="ui input left icon container">
+                                          <input id="uid" type="hidden" v-model="blog.uid">
+                                          <input id="title" type="text" v-model="blog.title" placeholder=" 请输入博客标题，必填！">
+                                          <i class="newspaper icon"></i>
+                                        </div>
+                                        <div id="editor-container" class="container"  style="padding: 10px 0;">
+                                            <p><span class="ui grey label">小提示</span> 在文中插入一个 <img src="wangEditor/static/emotions/default/48.gif" style="width:20px;height:20px;"> 表情作为分隔符，系统会将其之前的内容作为摘要显示</p>
+                                            <textarea id="editor-trigger" v-model="blog.content" style="width:100%;text-align: left;padding-left: 5px;">正在初始化编辑器...</textarea>
+                                        </div>
+                                        <div class="ui input left icon container">
+                                          <input id="tags" type="text" v-model="blog.tags" placeholder=" 请输入关键词，以英文逗号分隔，可以留空">
+                                          <i class="tags icon"></i>
+                                        </div>
+                                        <div class="ui input container" style="padding: 15px 0 5px 0;">
+                                          <button id="publish" class="ui teal button" v-on:click="publishBlog()">
+                                            <i class = "send icon"></i>
+                                            正式发表
+                                          </button>
+                                          <button id="saveToDraft" class="ui button" v-on:click="saveBlogToDraft()">
+                                            <i class = "coffee icon"></i>
+                                            保存草稿
+                                          </button>
+                                        </div>
                                     </div>
                                     <div class="ui tab" data-tab="blogdraft">
                                     草稿箱
@@ -116,7 +155,7 @@
                                 <div id="mcomments" data-page="mcomments" class="ui segment hide nav-page">
                                 </div>
                                 <!--管理作者-->
-                                <div id="musers" data-page="musers" class="ui segment hide nav-page" v-show="configs.isSiteAdmin">
+                                <div id="musers" data-page="musers" class="ui segment hide nav-page" v-show="user.isSiteAdmin">
                                     <div class="ui pointing teal secondary menu">
                                       <a class="item active" data-tab="allusers" v-on:click="tabHeadClick('allusers')">全部作者</a>
                                       <a class="item" data-tab="newuser" v-on:click="tabHeadClick('newuser')">新增作者</a>
@@ -129,7 +168,7 @@
                                     </div>
                                 </div>
                                 <!--管理标签-->
-                                <div id="mtags" data-page="mtags" class="ui segment hide nav-page" v-show="configs.isSiteAdmin">
+                                <div id="mtags" data-page="mtags" class="ui segment hide nav-page" v-show="user.isSiteAdmin">
                                 </div>
                                 <!--查看归档-->
                                 <div id="machieves" data-page="machieves" class="ui segment hide nav-page">
@@ -146,6 +185,20 @@
                         <span class="sep"> | </span>
                         Powered by <a href="http://dinsio.github.io/blog/">Dinsio BLOG</a>
                     </span>
+                </div>
+            </div>
+        </div>
+        <div class="ui small modal">
+            <div class="header">
+                {{{ ui.modalTitle }}}
+            </div>
+            <div class="content">
+                <p id="modalInfo">{{{ ui.modalInfo }}}</p>
+            </div>
+            <div class="actions">
+                <div id="closeButton" class="ui right labeled icon button" v-on:click="hideModal()">
+                    知道了
+                    <i class="checkmark icon"></i>
                 </div>
             </div>
         </div>
