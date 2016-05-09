@@ -23,6 +23,10 @@
         <div id="editor-trigger">
             <p>请输入内容...</p>
         </div>
+        <div>
+            <button id="doit">分词</button><br />
+            <textarea id="result" style="width: 500px;height: 400px;"></textarea>
+        </div>
     </div>
     
 
@@ -137,6 +141,16 @@
         editor.config.customUploadInit = uploadInit;
         //editor.config.menuFixed = false;    // 不吸顶 
         editor.create();
+
+        $(document).ready(function () {
+            $('#doit').click(function(){
+                $.post("http://api.pullword.com/post.php", { source: editor.$txt.text(), param1: 0.8, param2: 0 },
+                   function(data){
+                     $('#result').text(data);
+                   });
+            });
+        });
+
     </script>
 </body>
 </html>

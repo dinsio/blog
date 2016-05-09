@@ -12,6 +12,8 @@
     <script src="semantic/jquery.js"></script>
     <script src="semantic/semantic.js"></script>
     <script src="js/vue.js"></script>
+    <script src="js/jquery.ba-hashchange.js"></script>
+    <script src="js/jqPaginator.min.js"></script>
     <script src = "https://cdn.wilddog.com/js/client/current/wilddog.js" ></script>
     <script src="js/index.js"></script>
 
@@ -38,7 +40,7 @@
 						  <div style="text-align: center; line-height: 220%;">
 						  	<a class="ui teal label">作者</a>
 						  	<a class="ui green label">标签</a>
-						  	<a class="ui blue label">归档</a>
+						  	<a class="ui blue label">管理</a>
 						  </div>
   						</div>
 
@@ -64,11 +66,13 @@
                 <div class="g-postlist">
                 	<div class="m-post m-post-photo" v-for="blog in blogs">
 	                    <div class="content">
-                            <div class="ui top left aligned secondary stacked segment">
+                            <div class="ui top left aligned secondary segment">
                               <h3>{{ blog.title }}</h3>
                             </div>
-	                        <div class="text">{{{ blog.content }}}</div>
-                            <div class="ui section divider"></div>
+	                        <div class="text">
+                                {{{ blog.lead }}}
+                                <p><br/><p/>
+                            </div>
                             <div class="ui container grid" style="text-align: left;">
                                 <div class="twelve wide column" style="padding: 10px 0 0 0;">
                                     <i class="user icon"></i>&nbsp;<a href="index.html#author/{{ user.bloggerUID }}">{{ blog.author }}</a>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -92,22 +96,7 @@
 	                </div>
                 </div>
 
-                <div class="ui teal pagination menu" style="text-align: center;">
-				  <a class="active item">
-				    1
-				  </a>
-				  <div class="disabled item">
-				    ...
-				  </div>
-				  <a class="item">
-				    10
-				  </a>
-				  <a class="item">
-				    11
-				  </a>
-				  <a class="item">
-				    12
-				  </a>
+                <div id="jqPaginator" class="ui teal pagination menu" style="text-align: center;">
                 </div>
 
                 <div class="m-copyr">

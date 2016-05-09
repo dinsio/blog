@@ -128,12 +128,12 @@ $(document)
 
     // 站点统计数据
     statistics = conn.child("statistics");
-    statistics.once("value",function(snap){
+    statistics.on("value",function(snap){
       //console.log('get statistics:', snap.val());
-      viewData.statistics.blogs = snap.child("siteBlogs").val();
-      viewData.statistics.comments = snap.child("siteComments").val();
-      viewData.statistics.tags = snap.child("siteTags").val();
-      viewData.statistics.pageViews = snap.child("sitePageViews").val();
+      viewData.statistics.blogs = snap.child("blogs").val();
+      viewData.statistics.comments = snap.child("comments").val();
+      viewData.statistics.tags = snap.child("tags").val();
+      viewData.statistics.pageViews = snap.child("pageViews").val();
     });
 
     // 查询当前用户信息
@@ -175,47 +175,11 @@ $(document)
         publishBlog: function(){
           // 发表博客文章
           viewData.blog.status = 1;
-          getNow();
-          // 检查数据合法性
-          var isValid = true;
-          var iconHtml = '<i class="thumbs down icon"></i>';
-          if (viewData.blog.title == "") 
-          {
-            viewData.ui.modalInfo = iconHtml + ' 博客标题当然不能为空啊！无头尸多难看！';
-            isValid = false;
-          }
-          if (viewData.blog.content == "")
-          {
-            viewData.ui.modalInfo += '<br/>' + iconHtml + ' 博客内容肯定也不能为空啊！要不然发给鬼看？';
-            isValid = false;
-          }
-          if (!isValid){
-            viewData.ui.modalTitle = "发表博客出错";
-            $('.ui.small.modal').modal('show');
-          }
-          else{
-            // 数据合法，可以上传
-            var blogItem = conn.child("blogs/" + viewData.user.bloggerUID).push(viewData.blog);
-            // 获得新id
-            var blogId = blogItem.key();
-            // 更新服务器时间
-            conn.child("blogs/" + viewData.user.bloggerUID + "/" + blogId + "/timestamp").set(Wilddog.ServerValue.TIMESTAMP);
-            // 写入索引
-            conn.child("index/" + blogId).set(viewData.user.bloggerUID);
-            // 写入成功
-            viewData.ui.modalTitle = "发表博客成功";
-            viewData.ui.modalInfo = iconHtml.replace("thumbs down","thumbs up") + ' 您可以继续发表博客或者预览效果。';
-            viewData.blog.title = "";
-            viewData.blog.tags = "";
-            viewData.blog.content = "";
-            editor.clear();
-            $('.ui.small.modal').modal('show');
-          }
+          saveBlogData();
         },
         saveBlogToDraft: function(){
           viewData.blog.status = 0;
-          getNow();
-          // 检查数据合法性
+          saveBlogData();
         },
         hideModal : function(){
           $('.ui.small.modal').modal('hide'); 
@@ -247,10 +211,10 @@ $(document)
           });
           // 配置 onchange 事件
           editor.onchange = function () {
-              // 编辑区域内容变化时，实时打印出当前内容
+              // 编辑区域内容变化时，实时更新model数据
               viewData.blog.content = this.$txt.html();
           };
-
+          // 清空编辑区
           editor.clear();
         },1000);
         
@@ -266,13 +230,87 @@ $(document)
       //console.log(viewData.blog);
     }
 
-    function checkBlogData(){
+    function saveBlogData(){
+      getNow();
+      // 检查数据合法性
       var isValid = true;
-      if (viewData.blog.content == "")
+      var iconHtml = '<i class="thumbs down icon"></i>';
+      if (viewData.blog.title == "") 
       {
+        viewData.ui.modalInfo = iconHtml + ' 博客标题当然不能为空啊！无头尸多难看！';
         isValid = false;
       }
-      return isValid;
+      if (viewData.blog.content == "")
+      {
+        viewData.ui.modalInfo += '<br/>' + iconHtml + ' 博客内容肯定也不能为空啊！要不然发给鬼看？';
+        isValid = false;
+      }
+      if (!isValid){
+        if (viewData.blog.status == 1) viewData.ui.modalTitle = "发表博客出错";
+        if (viewData.blog.status == 0) viewData.ui.modalTitle = "保存草稿出错";
+        $('.ui.small.modal').modal('show');
+      }
+      else{
+        // 数据合法，可以上传
+        var blogItem = conn.child("blogs/" + viewData.user.bloggerUID).push(viewData.blog);
+        // 获得新id
+        var blogId = blogItem.key();
+        // 更新服务器时间
+        conn.child("blogs/" + viewData.user.bloggerUID + "/" + blogId + "/timestamp").set(Wilddog.ServerValue.TIMESTAMP);
+        // 写入索引
+        conn.child("index/" + viewData.blog.status + "/" + blogId).set({
+          "author": viewData.user.bloggerUID,
+          "timestamp": Wilddog.ServerValue.TIMESTAMP,
+          "title": viewData.blog.title   //搜索标题时候可以用到
+        });
+        // 写入标签（可能是多个）
+        if (viewData.blog.tags != ""){
+          // 有分隔符
+          if (viewData.blog.tags.indexOf(",") >= 0){
+            var list = viewData.blog.tags.split(",");
+            for (i = 0; i < list.length; i++){
+              var str = list[i].replace(/(^\s+)|(\s+$)/g,"").replace(/\s/g,"");
+              if(str != ""){
+                conn.child("tags/" + str + "/" + blogId).set({
+                  "author": viewData.user.bloggerUID,
+                  "timestamp": Wilddog.ServerValue.TIMESTAMP
+                });
+              }
+            }
+          }
+          else {
+            // 无分隔符，视作一个标签
+            var str = viewData.blog.tags.replace(/(^\s+)|(\s+$)/g,"").replace(/\s/g,"");
+            if (str != ""){
+              conn.child("tags/" + str + "/" + blogId).set({
+                "author": viewData.user.bloggerUID,
+                "timestamp": Wilddog.ServerValue.TIMESTAMP
+              });
+            }
+          }
+        }
+        // 更新作者汇总信息
+        conn.child("users/" + viewData.user.bloggerUID + "/blogs").transaction(function (currentValue) {
+          return (currentValue || 0) + 1;
+        });
+        // 更新站点汇总信息
+        conn.child("statistics/blogs").transaction(function (currentValue) {
+          return (currentValue || 0) + 1;
+        });
+        // 写入成功
+        if (viewData.blog.status == 1) {
+          viewData.ui.modalTitle = "发表博客成功";
+        }
+        if (viewData.blog.status == 0) {
+          viewData.ui.modalTitle = "保存草稿成功";
+        }
+        viewData.ui.modalInfo = iconHtml.replace("thumbs down","thumbs up") + ' 您可以继续发表博客或者预览效果。';
+        viewData.blog.title = "";
+        viewData.blog.tags = "";
+        viewData.blog.content = "";
+        editor.clear();
+        $('.ui.small.modal').modal('show');
+      }
     }
 
     // 切换页面
@@ -298,8 +336,8 @@ $(document)
     // 根据hash调整界面
     function applyPath(){
       //console.log(viewData.appPath);
-      if (viewData.appPath.page != "") changeNav(viewData.appPath.page);
-      if (viewData.appPath.tab != "") changeTab(viewData.appPath.tab);
+      //if (viewData.appPath.page != "") changeNav(viewData.appPath.page);
+      //if (viewData.appPath.tab != "") changeTab(viewData.appPath.tab);
     }
 
     // 监控hash路径变化
