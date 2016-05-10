@@ -4,7 +4,7 @@ var configs;
 var blogs;
 var viewData;
 var VM;
-var timer;
+var timer,clock;
 var pageSize = 2;
 var pageCount = 1;
 var currentPage = 1;
@@ -209,6 +209,8 @@ $(document)
                     }
                 });
 
+                fillTags();
+                // 居中图片
                 setImgAlign();
 
               }
@@ -237,13 +239,14 @@ $(document)
           viewData.configs.blogIntent = viewData.user.blogIntent;
           viewData.configs.blogAvatar = viewData.user.blogAvatar;
           viewData.configs.blogUrl = viewData.user.blogUrl;
+          // 设定站点统计为作者统计
+          viewData.statistics.blogs = viewData.user.blogs;
+          viewData.statistics.comments = viewData.user.comments;
         });
         // 站点统计数据
         statistics = conn.child("statistics");
         statistics.on("value",function(snap){
           //console.log('get statistics:', snap.val());
-          viewData.statistics.blogs = viewData.user.blogs;
-          viewData.statistics.comments = viewData.user.comments;
           viewData.statistics.tags = snap.child("tags").val();
           viewData.statistics.pageViews = snap.child("pageViews").val();
         });
@@ -325,6 +328,7 @@ $(document)
                     }
                 });
 
+                fillTags();
                 setImgAlign();
 
               }
@@ -347,6 +351,7 @@ $(document)
         // 调整文章中图片居中
         $("#indexContainer").removeClass("hide");
         timer = 0;
+        fillTags();
         setImgAlign();
       }
     });
@@ -369,6 +374,36 @@ $(document)
         timer++;
         //console.log(timer);
       }, 100);
+    }
+
+    function fillTags(){
+      var limit = 50;
+      setTimeout(function(){
+        // 填充标签
+        console.log($('.text[data-tags]').length);
+        if ($('.text[data-tags]').length == viewData.recordNumber) {
+          $('.text[data-tags]').each(function(){
+            if ($(this).attr('data-tags') && $(this).attr('data-tags') != ""){
+              var tagstr = $(this).attr('data-tags');
+              console.log(tagstr);
+              if (tagstr.indexOf(",") >= 0){
+                var tags = tagstr.split(",");
+                for (i = 0; i < tags.length; i++){
+                  if (tags[i]!="") $(this).append('<a class="ui tag label">' + tags[i] + '</a> ');
+                }
+              } else {
+                $(this).append('<a class="ui tag label">' + tagstr + '</a> ');
+              }
+            }
+          });
+          clock =limit;
+        }
+        else if (timer < limit)
+          fillTags();
+          clock++;
+        //console.log(timer);
+      }, 100);
+
     }
 
     // 根据hash调整界面

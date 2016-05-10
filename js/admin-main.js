@@ -279,6 +279,8 @@ $(document)
           "title": viewData.blog.title   //搜索标题时候可以用到
         });
         // 写入标签聚合索引（可能是多个）
+        // 统计出新标签
+        var newTags = "";
         if (viewData.blog.tags != ""){
           // 有分隔符
           if (viewData.blog.tags.indexOf(",") >= 0){
@@ -286,6 +288,8 @@ $(document)
             for (i = 0; i < list.length; i++){
               var str = list[i].replace(/(^\s+)|(\s+$)/g,"").replace(/\s/g,"");
               if(str != ""){
+                if (newTags !="") newTags += "," + str;
+                else newTags += str;
                 // 给tag添加索引
                 conn.child("tags/" + str + "/" + blogId).set({
                   "author": viewData.user.bloggerUID,
@@ -299,6 +303,8 @@ $(document)
             // 无分隔符，视作一个标签
             var str = viewData.blog.tags.replace(/(^\s+)|(\s+$)/g,"").replace(/\s/g,"");
             if (str != ""){
+              if (newTags !="") newTags += "," + str;
+              else newTags += str;
               // 给tag添加索引
               conn.child("tags/" + str + "/" + blogId).set({
                 "author": viewData.user.bloggerUID,
@@ -308,6 +314,9 @@ $(document)
             }
           }
         }
+        // 更新整理后的标签
+        conn.child("blogs/" + blogId + "/tags").set(newTags);
+
         // 更新作者汇总信息
         conn.child("users/" + viewData.user.bloggerUID + "/blogs").transaction(function (currentValue) {
           return (currentValue || 0) + 1;
