@@ -252,18 +252,30 @@ $(document)
       }
       else{
         // 数据合法，可以上传
-        var blogItem = conn.child("blogs/" + viewData.user.bloggerUID).push(viewData.blog);
+        var blogItem = conn.child("blogs").push(viewData.blog);
         // 获得新id
         var blogId = blogItem.key();
         // 更新服务器时间
-        conn.child("blogs/" + viewData.user.bloggerUID + "/" + blogId + "/timestamp").set(Wilddog.ServerValue.TIMESTAMP);
-        // 写入索引
-        conn.child("index/" + viewData.blog.status + "/" + blogId).set({
+        conn.child("blogs/" + blogId + "/timestamp").set(Wilddog.ServerValue.TIMESTAMP);
+        // 写入分页索引
+        conn.child("index/status/" + viewData.blog.status + "/" + blogId).set({
           "author": viewData.user.bloggerUID,
           "timestamp": Wilddog.ServerValue.TIMESTAMP,
           "title": viewData.blog.title   //搜索标题时候可以用到
         });
-        // 写入标签（可能是多个）
+        // 写入用户聚合索引
+        conn.child("index/user/" + viewData.user.bloggerUID + "/" + blogId).set({
+          "author": viewData.user.bloggerUID,
+          "timestamp": Wilddog.ServerValue.TIMESTAMP,
+          "title": viewData.blog.title   //搜索标题时候可以用到
+        });
+        // 写入归档聚合索引
+        conn.child("achieve/" + viewData.blog.postYear + "/" + viewData.blog.postMonth + "/" + viewData.blog.postDay + "/" + blogId).set({
+          "author": viewData.user.bloggerUID,
+          "timestamp": Wilddog.ServerValue.TIMESTAMP,
+          "title": viewData.blog.title   //搜索标题时候可以用到
+        });
+        // 写入标签聚合索引（可能是多个）
         if (viewData.blog.tags != ""){
           // 有分隔符
           if (viewData.blog.tags.indexOf(",") >= 0){
@@ -271,9 +283,11 @@ $(document)
             for (i = 0; i < list.length; i++){
               var str = list[i].replace(/(^\s+)|(\s+$)/g,"").replace(/\s/g,"");
               if(str != ""){
+                // 给tag添加索引
                 conn.child("tags/" + str + "/" + blogId).set({
                   "author": viewData.user.bloggerUID,
-                  "timestamp": Wilddog.ServerValue.TIMESTAMP
+                  "timestamp": Wilddog.ServerValue.TIMESTAMP,
+                  "title": viewData.blog.title   //搜索标题时候可以用到
                 });
               }
             }
@@ -282,9 +296,11 @@ $(document)
             // 无分隔符，视作一个标签
             var str = viewData.blog.tags.replace(/(^\s+)|(\s+$)/g,"").replace(/\s/g,"");
             if (str != ""){
+              // 给tag添加索引
               conn.child("tags/" + str + "/" + blogId).set({
                 "author": viewData.user.bloggerUID,
-                "timestamp": Wilddog.ServerValue.TIMESTAMP
+                "timestamp": Wilddog.ServerValue.TIMESTAMP,
+                "title": viewData.blog.title   //搜索标题时候可以用到
               });
             }
           }
@@ -296,6 +312,12 @@ $(document)
         // 更新站点汇总信息
         conn.child("statistics/blogs").transaction(function (currentValue) {
           return (currentValue || 0) + 1;
+        });
+        //更新站点统计tags
+        conn.child("tags").once("value", function(snapshot) {
+          conn.child("statistics/tags").transaction(function (currentValue) {
+            return (snapshot.numChildren() || 0) + 1;
+          });
         });
         // 写入成功
         if (viewData.blog.status == 1) {
@@ -336,8 +358,8 @@ $(document)
     // 根据hash调整界面
     function applyPath(){
       //console.log(viewData.appPath);
-      //if (viewData.appPath.page != "") changeNav(viewData.appPath.page);
-      //if (viewData.appPath.tab != "") changeTab(viewData.appPath.tab);
+      if (viewData.appPath.page != "") changeNav(viewData.appPath.page);
+      if (viewData.appPath.tab != "") changeTab(viewData.appPath.tab);
     }
 
     // 监控hash路径变化

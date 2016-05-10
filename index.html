@@ -28,7 +28,7 @@
                         <span class="f-trans arrowleft">&nbsp;</span>
                     </a>
                     <div class="m-nav">
-                        <div class="navitm search">
+                        <div class="navitm search hide">
                             <form action="/search" method="get">
 						        <div class="ui icon mini input" style="width:100%;">
 						            <input type="text" placeholder=" 内容搜索">
@@ -61,7 +61,7 @@
             </div>
             <div class="g-main" style="text-align: center;">
                 <div class="m-nick"><a hidefocus="true" v-bind:href="configs.blogUrl">{{ configs.blogName }}</a></div>
-                <div class="m-about">{{ configs.blogIntent }}</div>
+                <div class="m-about">{{{ configs.blogIntent }}}</div>
 
                 <div class="g-postlist">
                 	<div class="m-post m-post-photo" v-for="blog in blogs">
@@ -75,7 +75,7 @@
                             </div>
                             <div class="ui container grid" style="text-align: left;">
                                 <div class="twelve wide column" style="padding: 10px 0 0 0;">
-                                    <i class="user icon"></i>&nbsp;<a href="index.html#author/{{ user.bloggerUID }}">{{ blog.author }}</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <i class="user icon"></i>&nbsp;<a href="index.html#{{ user.bloggerUID }}">{{ blog.author }}</a>&nbsp;&nbsp;&nbsp;&nbsp;
                                     <i class="wait icon"></i>&nbsp;<span>{{ blog.postTime }}</span>&nbsp;&nbsp;&nbsp;&nbsp;
                                     <i class="unhide icon"></i>&nbsp;<span>{{ blog.traffic }}</span>&nbsp;&nbsp;&nbsp;&nbsp;
                                     <i class="comments outline icon"></i>&nbsp;<a href="index.html#comments/{{ blog.id }}">{{ blog.comments }}</a>&nbsp;&nbsp;&nbsp;&nbsp;

@@ -36,6 +36,9 @@
     <script type="text/javascript" src="js/plupload/i18n/zh_CN.js"></script>
     <script type="text/javascript" src="js/qiniu.js"></script>
     <script type="text/javascript">
+        alert('yes');
+    </script>
+    <script type="text/javascript">
         // 封装 console.log 函数
         function printLog(title, info) {
             window.console && console.log(title, info);
@@ -142,12 +145,40 @@
         //editor.config.menuFixed = false;    // 不吸顶 
         editor.create();
 
+        function callback(data){
+            alert(data[0]);
+        }
+
         $(document).ready(function () {
             $('#doit').click(function(){
-                $.post("http://api.pullword.com/post.php", { source: editor.$txt.text(), param1: 0.8, param2: 0 },
-                   function(data){
-                     $('#result').text(data);
-                   });
+                $.ajax({
+                    url: "http://localhost:51947/wordsplitter.ashx?origin=" + editor.$txt.text() + "&level=0.6&callback=callback",
+                    type: "GET",
+                    dataType: "jsonp",
+                    crossDomain: true,
+                    success: function (result) {
+                        console.log(result);
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        console.log(xhr);
+                    }
+                });
+                // $("#result").load("http://api.pullword.com/get.php?source=" + editor.$txt.text() + "&param1=0.8&param2=0",function(data){ 
+                //     $(this).html(data); 
+                // });
+                // function test(data){
+                //     console.log(data);
+                // }
+                // $.getScript("http://api.pullword.com/get.php?source=" + editor.$txt.text() + "&param1=0.8&param2=0&callback=test");
+                // var url = "http://localhost:51947/wordsplitter.ashx?origin=" + editor.$txt.text() + "&level=0.85";
+                // var script = document.createElement('script');
+                // script.setAttribute('src', url);
+                // script.setAttribute('id', 'resultScript');
+                // document.getElementsByTagName('head')[0].appendChild(script); 
+                // setTimeout(function(){
+                //     console.log(document.getElementById('resultScript').src);
+                // },2000);
+                
             });
         });
 
