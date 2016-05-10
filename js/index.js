@@ -168,6 +168,7 @@ $(document)
               if (postMonth < 10) postMonth = "0" + postMonth;
               viewData.blogs.push({
                 "id": s.key(),
+                "uid": s.child("uid").val(),
                 "author": s.child("author").val(),
                 "comments": s.child("comments").val(),
                 "content": s.child("content").val(),

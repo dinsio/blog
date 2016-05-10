@@ -53,6 +53,7 @@ $(document)
         "modalInfo": "",
       },
       "blog": {
+        "uid": "",
         "author": "",
         "title": "",
         "status": -1,
@@ -103,6 +104,7 @@ $(document)
         if (conn.getAuth().provider == "password"){
           viewData.user.isBlogger = true;
           viewData.user.bloggerUID = conn.getAuth().uid.split(":")[1];
+          viewData.blog.uid = viewData.user.bloggerUID;
           //console.log("current blogger uid:", viewData.configs.bloggerUID);
         }
         else gotoLogin();
@@ -143,6 +145,7 @@ $(document)
       viewData.user.author = snap.child("name").val();
       // 给当前blog作者赋值
       viewData.blog.author = viewData.user.author;
+      viewData.blog.uid = viewData.user.bloggerUID;
       viewData.user.blogName = snap.child("blogName").val();
       viewData.user.blogIntent= snap.child("blogIntent").val();
       viewData.user.blogAvatar = snap.child("blogAvatar").val();
