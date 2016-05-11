@@ -44,6 +44,7 @@ $(document)
         "email": "",
         "uptoken": "",
         "blogs": 0,
+        "pageViews": 0,
         "comments": 0
       },
       "appPath": {
@@ -109,7 +110,7 @@ $(document)
     // 加载页面数据
     function loadData(){
       // 清空blog列表
-      viewData.blogs.length = 0;
+      viewData.blogs = [];
       if (viewData.appPath.author == "0")
       {
         // 此时获取全局数据
@@ -137,6 +138,7 @@ $(document)
         // 全部博文数量
         blogs.once("value",function(snapshot){
           viewData.totalNumber = snapshot.numChildren();
+          if (viewData.totalNumber == 0) $('#jqPaginator').css("display","none");
         });
         // 当前页博文所需取出的数据
         blogs.limitToLast(pageSize * currentPage).once("value",function(snapshot){
@@ -208,9 +210,10 @@ $(document)
                         //$('#text').html('当前第' + num + '页');
                     }
                 });
-
+                if (viewData.totalNumber > 0) $('#jqPaginator').css("display","");
+                clock = 0;
                 fillTags();
-                // 居中图片
+                timer = 0;
                 setImgAlign();
 
               }
@@ -223,6 +226,7 @@ $(document)
         // 单个作者数据
         // 先查询当前用户信息
         user = conn.child("users/" + viewData.appPath.author);
+        //console.log("users/" + viewData.appPath.author);
         user.once("value",function(snap){
           //console.log('get user:', snap.val());
           viewData.user.author = snap.child("name").val();
@@ -234,6 +238,8 @@ $(document)
           viewData.user.uptoken = snap.child("uptoken").val();
           viewData.user.blogs = snap.child("blogs").val();
           viewData.user.comments = snap.child("comments").val();
+          viewData.user.pageViews = snap.child("pageViews").val();
+          //console.log(snap.child("pageViews").val());
           // 设定站点数据为作者数据
           viewData.configs.blogName = viewData.user.blogName;
           viewData.configs.blogIntent = viewData.user.blogIntent;
@@ -243,6 +249,7 @@ $(document)
           viewData.statistics.blogs = viewData.user.blogs;
           viewData.statistics.comments = viewData.user.comments;
         });
+
         // 站点统计数据
         statistics = conn.child("statistics");
         statistics.on("value",function(snap){
@@ -284,14 +291,24 @@ $(document)
             blog.once("value",function(s){
               var postDay = s.child("postDay").val();
               var postMonth = s.child("postMonth").val();
+              var content = "", lead = "";
               if (postDay < 10) postDay = "0" + postDay;
               if (postMonth < 10) postMonth = "0" + postMonth;
+              content = s.child("content").val();
+              var divider = '<p><img src="wangEditor/static/emotions/default/48.gif">';
+              if (content.indexOf(divider) >= 0) lead = content.split(divider)[0];
+              else lead = content;
+              if (s.child("status").val() == 0) {
+                content = '<div class="ui warning icon message" style="padding-top:20px;"><i class="inbox icon"></i><div class="content" style="padding-bottom:0;"><div class="header">此篇博文是草稿，内容暂时隐藏</div><p>如果您关于这个话题有何建议，请给作者留言提出，谢谢。</p></div></div>';
+                lead = content;
+              }
               viewData.blogs.push({
                 "id": s.key(),
+                "uid": s.child("uid").val(),
                 "author": s.child("author").val(),
                 "comments": s.child("comments").val(),
-                "content": s.child("content").val(),
-                "lead": s.child("content").val().split('<p><img src="wangEditor/static/emotions/default/48.gif">')[0],
+                "content": content,
+                "lead": lead,
                 "postDay": postDay,
                 "postMonth": postMonth,
                 "postTime": s.child("postTime").val(),
@@ -327,8 +344,10 @@ $(document)
                         //$('#text').html('当前第' + num + '页');
                     }
                 });
-
+                if (viewData.totalNumber > 0) $('#jqPaginator').css("display","");
+                clock = 0;
                 fillTags();
+                timer = 0;
                 setImgAlign();
 
               }
@@ -350,8 +369,9 @@ $(document)
       ready: function(){
         // 调整文章中图片居中
         $("#indexContainer").removeClass("hide");
-        timer = 0;
+        clock = 0;
         fillTags();
+        timer = 0;
         setImgAlign();
       }
     });
@@ -380,12 +400,12 @@ $(document)
       var limit = 50;
       setTimeout(function(){
         // 填充标签
-        console.log($('.text[data-tags]').length);
+        //console.log($('.text[data-tags]').length);
         if ($('.text[data-tags]').length == viewData.recordNumber) {
           $('.text[data-tags]').each(function(){
             if ($(this).attr('data-tags') && $(this).attr('data-tags') != ""){
               var tagstr = $(this).attr('data-tags');
-              console.log(tagstr);
+              //console.log(tagstr);
               if (tagstr.indexOf(",") >= 0){
                 var tags = tagstr.split(",");
                 for (i = 0; i < tags.length; i++){
@@ -398,10 +418,10 @@ $(document)
           });
           clock =limit;
         }
-        else if (timer < limit)
+        else if (clock < limit)
           fillTags();
           clock++;
-        //console.log(timer);
+        //console.log(clock);
       }, 100);
 
     }
@@ -410,9 +430,22 @@ $(document)
     function applyPath(){
       //console.log(currentPage);
       loadData();
-      setTimeout(function(){
-        $('html,body').animate({scrollTop: '0px'}, 500);
-      },500);
+      // 跳转到指定位置
+      if (window.location.hash.indexOf("/") > 0){
+        setTimeout(function(){
+          $('html,body').animate({scrollTop: '170px'}, 500);
+        },500);
+      }
+      // 全站访问统计
+      conn.child("statistics/pageViews").transaction(function (currentValue) {
+        return (currentValue || 0) + 1;
+      });
+      // 作者访问统计
+      if (viewData.appPath.author != 0){
+        conn.child("users/" + viewData.appPath.author + "/pageViews").transaction(function (currentValue) {
+          return (currentValue || 0) + 1;
+        });
+      }
     }
 
     // 监控hash路径变化

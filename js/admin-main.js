@@ -255,7 +255,28 @@ $(document)
       }
       else{
         // 数据合法，可以上传
-        var blogItem = conn.child("blogs").push(viewData.blog);
+        var blogItem = conn.child("blogs").push(viewData.blog,function(err){
+          if (err == null){
+            // 写入成功
+            if (viewData.blog.status == 1) {
+              viewData.ui.modalTitle = "发表博客成功";
+            }
+            if (viewData.blog.status == 0) {
+              viewData.ui.modalTitle = "保存草稿成功";
+            }
+            viewData.ui.modalInfo = iconHtml.replace("thumbs down","thumbs up") + ' 您可以继续发表博客或者预览效果。';
+            viewData.blog.title = "";
+            viewData.blog.tags = "";
+            viewData.blog.content = "";
+            editor.clear();
+            $('.ui.small.modal').modal('show');
+          } else {
+            if (viewData.blog.status == 1) viewData.ui.modalTitle = "发表博客出错";
+            if (viewData.blog.status == 0) viewData.ui.modalTitle = "保存草稿出错";
+            viewData.ui.modalInfo = iconHtml.replace("thumbs up","thumbs down") + ' 服务器错误，请联系网站管理员！提示信息如下：' + err;
+            $('.ui.small.modal').modal('show');
+          }
+        });
         // 获得新id
         var blogId = blogItem.key();
         // 更新服务器时间
@@ -331,19 +352,6 @@ $(document)
             return (snapshot.numChildren() || 0) + 1;
           });
         });
-        // 写入成功
-        if (viewData.blog.status == 1) {
-          viewData.ui.modalTitle = "发表博客成功";
-        }
-        if (viewData.blog.status == 0) {
-          viewData.ui.modalTitle = "保存草稿成功";
-        }
-        viewData.ui.modalInfo = iconHtml.replace("thumbs down","thumbs up") + ' 您可以继续发表博客或者预览效果。';
-        viewData.blog.title = "";
-        viewData.blog.tags = "";
-        viewData.blog.content = "";
-        editor.clear();
-        $('.ui.small.modal').modal('show');
       }
     }
 
