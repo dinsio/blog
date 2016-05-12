@@ -426,7 +426,7 @@ $(document)
             var replyContent = $($(this).parent().parent().find('.text')[0]).html();
             viewData.comment.replyTo = $(this).attr('data-key');
             viewData.commentHelper.preContent = '<pre><code class="apache hljs">@' + replyAuthor + ' : ' + replyContent + '</code></pre>';
-            $("#commentContent").focus();
+            $("#commentContent").attr('placeholder',' 回复@' + replyAuthor).focus();
           });
           ticks = ticksLimit;
         }
