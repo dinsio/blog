@@ -182,7 +182,7 @@ $(document)
         },
         saveBlogToDraft: function(){
           viewData.blog.status = 0;
-          saveBlogData();
+          //saveBlogData();
         },
         hideModal : function(){
           $('.ui.small.modal').modal('hide'); 
