@@ -5,7 +5,7 @@ var blogs;
 var viewData;
 var VM;
 var timer,clock;
-var pageSize = 2;
+var pageSize = 10;
 var pageCount = 1;
 var currentPage = 1;
 
